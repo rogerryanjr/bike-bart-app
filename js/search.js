@@ -32,6 +32,12 @@ document.getElementById("search-button").addEventListener("click", function() {
                 .openPopup();
 
             map.setView([lat, lng], 14);
+
+            if (myLat !== null && myLng !== null) {
+                getBikeRoute(myLat, myLng, lat, lng);
+            } else {
+                console.log("Don't have your location yet - cant draw a route... ")
+            }
         })
         .catch(function (error) {
             console.log("Error getting your destination", error);
