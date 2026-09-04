@@ -18,6 +18,9 @@ if (navigator.geolocation) {
                 .addTo(map)
                 .bindPopup("You are here!")
                 .openPopup();
+
+            loadAllStops(userLat, userLng); // Load transit stops after getting user location
+            showNearbyStops(userLat, userLng, 7);
         },
         function (error) {
             console.log("Can't get location :(", error.message);
