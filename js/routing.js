@@ -1,44 +1,27 @@
-// Routing for bike 
-let routeLine = null; 
+// Routing for bike
+const BIKE_SPEED_MPH = 10; // assumed cyclist speed
 
-function getBikeRoute(startLat, startLng, endLat, endLng) {
-
-    const url = 
-    "https://router.project-osrm.org/route/v1/cycling/" + 
+// Get a bike route between two points: its line, distance and time at BIKE_SPEED_MPH
+function getBikeLeg(startLat, startLng, endLat, endLng) {
+    const url =
+    API_URLS.bikeRouting +
     startLng + "," + startLat + ";" +
     endLng + "," + endLat +
     "?overview=full&geometries=geojson";
 
-    fetch(url)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            if (!data.routes || data.routes.length === 0) {
-                alert("No bike route found.");
-                return;
+    return fetchJson(url).then(function (data) {
+        if (!data.routes || data.routes.length === 0) {
+            throw new Error("No bike route found.");
         }
 
         const route = data.routes[0];
-        const coordinates = route.geometry.coordinates;
 
-        const latLngs = route.geometry.coordinates.map(function (point) {
-            return [point[1], point[0]];
-        });
-
-        if (routeLine) {
-            map.removeLayer(routeLine);
-        }
-        routeLine = L.polyline(latLngs, { color: "blue", weight: 4 }).addTo(map);
-        map.fitBounds(routeLine.getBounds());
-        
-        const distanceMiles = (route.distance / 1609.34).toFixed(1);
-        const durationMin = Math.round(route.duration / 60);
-        console.log("ROute: " + distanceMiles + " miles, about " + durationMin + " minutes by bike, no bus");
-
-        })
-        .catch(function (error) {
-            console.log("Routing error:", error);
-        });
-       
+        // OSRM's duration doesn't reflect our assumed speed, so calculate it from distance
+        const miles = route.distance / 1609.34;
+        return {
+            coords: route.geometry.coordinates, // [lng, lat] pairs
+            miles: miles,
+            minutes: (miles / BIKE_SPEED_MPH) * 60
+        };
+    });
 }

@@ -3,31 +3,60 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Bay Area Bike + Bus</title>
+    <title>Bay Area Bike + BART</title>
 
-    <!-- Leadlet CSS -->
-     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- MapLibre CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
 
-     <!-- My CSS for buttons and what not -->
-      <link rel="stylesheet" href="css/style.css" />
+    <!-- My CSS for buttons and what not -->
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-    <div id="search-box">
-        <input type="text" id="destination-input" placeholder="Enter your destination: " />
-        <button id="search-button">Go</button>
-    </div>
     <div id="map"></div>
 
-    <!-- Leaflet JS -->
+    <aside id="panel">
+        <h1>Bike + BART</h1>
+        <form id="search-form" autocomplete="off">
+            <div class="field">
+                <label for="start-input">From</label>
+                <input type="text" id="start-input" placeholder="My location" />
+                <button type="button" id="locate-button" title="Use my device location" aria-label="Use my device location">◎</button>
+            </div>
+            <div class="field">
+                <label for="destination-input">To</label>
+                <input type="text" id="destination-input" placeholder="Where are you going?" required />
+            </div>
+            <div class="field">
+                <label for="leave-select">Leave</label>
+                <select id="leave-select">
+                    <option value="now">Now</option>
+                    <option value="at">At a set time</option>
+                </select>
+            </div>
+            <!-- Scroll wheels for the departure time, filled in by search.js -->
+            <div id="leave-time" class="time-wheel" hidden>
+                <div class="wheel wheel-day" data-part="day" tabindex="0" aria-label="Day"></div>
+                <div class="wheel" data-part="hour" tabindex="0" aria-label="Hour"></div>
+                <div class="wheel" data-part="minute" tabindex="0" aria-label="Minute"></div>
+                <div class="wheel" data-part="ampm" tabindex="0" aria-label="AM or PM"></div>
+            </div>
+            <button type="submit" id="search-button">Plan trip</button>
+        </form>
+        <div id="location-notice" class="notice" hidden></div>
+        <div id="trip-results" hidden></div>
+    </aside>
+
+    <!-- MapLibre JS -->
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
     <script src="js/config.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/bart-shapes-data.js"></script>
     <script src="js/map-init.js"></script>
-    <script src="js/geolocation.js"></script>
-    <script src="js/routing.js"></script>
     <script src="js/transit.js"></script>
+    <script src="js/routing.js"></script>
+    <script src="js/bart.js"></script>
+    <script src="js/geolocation.js"></script>
     <script src="js/search.js"></script>
 </body>
 </html>
-
- 
